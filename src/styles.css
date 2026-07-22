@@ -148,3 +148,33 @@
     color: var(--color-foreground);
   }
 }
+
+@utility text-success {
+  color: var(--color-success);
+}
+@utility bg-success {
+  background-color: var(--color-success);
+}
+@utility text-warning {
+  color: var(--color-warning);
+}
+@utility bg-warning {
+  background-color: var(--color-warning);
+}
+
+@keyframes pulse-dot {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.35; }
+}
+@utility pulse-dot {
+  animation: pulse-dot 1.6s ease-in-out infinite;
+}
+
+@keyframes ticker {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+@utility animate-ticker {
+  animation: ticker 40s linear infinite;
+}
+
