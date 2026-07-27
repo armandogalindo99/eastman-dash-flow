@@ -1,4 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { AuthProvider, useAuth } from "@/lib/auth";
+import { LoginScreen } from "@/components/LoginScreen";
+import { LogOut } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import {
   Activity, Database, Server, Radio, Cpu, ShieldCheck, PlayCircle, PauseCircle,
@@ -34,8 +37,40 @@ export const Route = createFileRoute("/")({
       { name: "twitter:card", content: "summary_large_image" },
     ],
   }),
-  component: Dashboard,
+  component: RouteComponent,
 });
+
+function RouteComponent() {
+  return (
+    <AuthProvider>
+      <Gate />
+    </AuthProvider>
+  );
+}
+
+function Gate() {
+  const { user, ready, signOut } = useAuth();
+  if (!ready) return null;
+  if (!user) return <LoginScreen />;
+  return (
+    <div className="relative">
+      <div className="pointer-events-none fixed right-4 top-4 z-50 flex items-center gap-2">
+        <span className="pointer-events-auto rounded-full border border-border bg-card/90 px-3 py-1.5 text-xs font-medium text-foreground shadow-sm backdrop-blur">
+          {user.username} · {user.role === "admin" ? "Administrador" : "Operador"}
+        </span>
+        <button
+          type="button"
+          onClick={signOut}
+          className="pointer-events-auto inline-flex items-center gap-1.5 rounded-full border border-border bg-card/90 px-3 py-1.5 text-xs font-medium text-muted-foreground shadow-sm backdrop-blur transition-colors hover:text-foreground"
+        >
+          <LogOut className="h-3.5 w-3.5" />
+          Salir
+        </button>
+      </div>
+      <Dashboard />
+    </div>
+  );
+}
 
 // ---------- Types ----------
 type LogLevel = "INFO" | "WARN" | "ERROR" | "OK";
